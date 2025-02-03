@@ -36,8 +36,8 @@ Parameter gamma_G [expr {2.21e5}]
 # Pulse Paramaters 
 #---------------------------------------------------------------------
 
-set time_relax 0
-set time_excited 1e-9
+set time_relax 0 ;#s
+set time_excited 10e-9;#s
 set freq0 100e9 ;# frequency of excitation in Hz*2pi
 set amplitude0 795.77 ;#units A/m 
 set freq1 20e9
@@ -160,18 +160,6 @@ set y [expr {500e-9}]
 #
 #---------------------------------------------------------------------------------------------------------------------------------------
 
-#---------------------------------------------------------------------
-# Coding the General Energy Terms 
-#---------------------------------------------------------------------
-
-# Uniform Exchange
-Specify Oxs_UniformExchange [subst {
-    A $A
-}]
-
-# Demag
-Specify Oxs_Demag {}
-
 # Cant figure out how to set two different DMI terms for each disk FIX THIS ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     #---------------------------------------------------------------------
     # Set Disk 1
@@ -230,6 +218,14 @@ if {1 == $SimType} {
         atlas :diskt
     }]
 
+    # Uniform Exchange
+    Specify Oxs_UniformExchange [subst {
+        A $A
+    }]
+
+    # Demag
+    Specify Oxs_Demag {}
+
     # Energy Evolver
     Specify Oxs_CGEvolve:evolver {}
 
@@ -282,6 +278,14 @@ if {1 == $SimType} {
         cellsize {$xCell3 $yCell3 $zCell3}
         atlas :diskb
     }]
+
+    # Uniform Exchange
+    Specify Oxs_UniformExchange [subst {
+        A $A
+    }]
+
+    # Demag
+    Specify Oxs_Demag {}
 
     # Energy Evolver
     Specify Oxs_CGEvolve:evolver {}
@@ -346,6 +350,19 @@ if {1 == $SimType} {
         atlas :atlas
     }]
 
+    # Exchange in disks
+    Specify Oxs_Exchange6Ngbr [subst {
+        atlas: atlas
+        A {
+            diskt diskt $A
+            diskt diskb 0
+            diskb diskb $A
+        }
+    }]
+
+    # Demag
+    Specify Oxs_Demag {}
+
     # Creates Ms Values for whole system
     Specify Oxs_AtlasScalarField:Ms [subst {
         atlas :atlas
@@ -386,7 +403,7 @@ if {1 == $SimType} {
 
     if {3 == $SimType} {
     #---------------------------------------------------------------------
-    # Simulation 3:otal system Energy Minimization Simulation
+    # Simulation 3: Total System Energy Minimization Simulation
     #---------------------------------------------------------------------     
         set SimName "SimTrilayerM0"
 
@@ -450,7 +467,7 @@ if {1 == $SimType} {
         Schedule "Oxs_RungeKuttaEvolve:evolver:Total energy density" energy Stage 1
     }
 } else {
-    error "Unsupported Value of SimType, accepted values are 1 for Ground state top, 2 for ground state bottom, 3 for total system ground state or 0 for running Simulation"
+    error "Unsupported Value of SimType, accepted values are 1 for producing the Ground state top, 2 for ground state bottom, 3 for total system ground state or 0 for running time simulation"
 }
 
 
