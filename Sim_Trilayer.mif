@@ -1,0 +1,540 @@
+# MIF 2.1
+# This File Simulates a Three Disk system in a Trilayer configuation, for this configuation Diskt is on top and Diskb is on bottom, and diskm in in the middle
+# This file is able to generate the ground state file and run the simulation in the same file by setting paramter SimType, 
+# 1 creates the ground state file for the top, 2 creates the bottom ground state, 0 runs the simulation, set to 0 by default
+
+set pi [expr {4*atan(1.0)}]
+set mu0 [expr {4*$pi*1e-7}]
+
+#---------------------------------------------------------------------
+# Name Simulation
+#---------------------------------------------------------------------
+
+Parameter SimName SimTrilayer
+Parameter D1 0 ;#set the DMI constant D for Disk 1, this can be set through the acompanying .sh file my passing a variable when calling the .sh file Ex: sbatch runSim_VortexDMI.sh 0 <- this is D value
+Parameter D2 0 ;#set the DMI constant D for Disk 2
+
+Parameter SimType 0 ;#sets type of simulation, 1 creates the top disk ground state file, 2 creates the bottom ground state file, 0 runs the simulation with the created ground state, 3 generates the full system ground state from the top and bottom ground states
+
+#---------------------------------------------------------------------
+# Simulation Length and Data output 
+#---------------------------------------------------------------------
+
+set stage_length 83.333333e-12  ;#s 
+set total_time_running 40.00e-9  ;#s
+set num_of_stages_ [subst [expr {$total_time_running/$stage_length}]]
+set num_of_stages [expr int($num_of_stages_)]
+
+#---------------------------------------------------------------------
+# Evolution Parameters
+#---------------------------------------------------------------------
+Parameter A [expr {1.5e-11}]  ;#J/m
+Parameter alpha [expr {.008}]
+Parameter gamma_G [expr {2.21e5}]
+
+#---------------------------------------------------------------------
+# Pulse Paramaters 
+#---------------------------------------------------------------------
+
+set time_relax 0
+set time_excited 1e-9
+set freq0 100e9 ;# frequency of excitation in Hz*2pi
+set amplitude0 795.77 ;#units A/m 
+set freq1 20e9
+set amplitude1 0
+set freq2 20e9
+set amplitude2 0
+set t0rel -0.4e-9
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+# Set Disk Dimensions
+
+set x [expr {500e-9}]
+set y [expr {500e-9}]
+
+# Set Disk 1
+
+    #---------------------------------------------------------------------
+    # Set Geometry Disk 1 - Top
+    #---------------------------------------------------------------------
+
+    set x1 $x
+    set y1 $y
+    set z1 [expr {1e-9}]
+    set r1 [expr {$x1/2}]
+
+    set 1thicknessby2 [expr {1e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
+
+    set xCell1 2e-9
+    set yCell1 2e-9
+    set zCell1 1e-9
+
+    set xr1 [expr {$x1/2}]
+    set yr1 [expr {$y1/2}]
+    set zr1 [expr {$z1}]
+    set nxr1 [expr {-$x1/2}]
+    set nyr1 [expr {-$y1/2}]
+    set nzr1 [expr {0}] ;# Note this is where the stacking of the disks is defined
+
+    #---------------------------------------------------------------------
+    # Material Paramaters Disk 1
+    #---------------------------------------------------------------------
+
+    Parameter M01 [expr {8.6e5}]  ;#A/m
+    set DD1 [expr {$D1}] ;# Allows for varying of DMI value through for loops in .sh file, in mJ/m^2
+    set sigma1 1 ;# FIX THIS fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+    #Parameter K1 [expr {4.5e-3}] 
+    #J/m^3
+
+    Parameter Hc_x_uT1 0
+    set Hc_x1 [expr {$Hc_x_uT1*1e-3*795.77}]
+    Parameter Hc_y1 [expr {0*795.77}] ;#A/m (or mT by the multiplier)
+
+# Set Disk 2
+
+    #---------------------------------------------------------------------
+    # Set Geometry Disk 2 - Middle
+    #---------------------------------------------------------------------
+
+    set x2 $x
+    set y2 $y
+    set z2 [expr {2e-9}]
+    set r2 [expr {$x2/2}]
+
+    set 2thicknessby2 [expr {2e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
+
+    set xCell2 2e-9
+    set yCell2 2e-9
+    set zCell2 1e-9
+
+    set xr2 [expr {$x2/2}]
+    set yr2 [expr {$y2/2}]
+    set zr2 [expr {0}] ;# Note this is where the stacking of the disks is defined
+    set nxr2 [expr {-$x2/2}]
+    set nyr2 [expr {-$y2/2}]
+    set nzr2 [expr {-$z2}]
+
+    #---------------------------------------------------------------------
+    # Material Paramaters Disk 2
+    #---------------------------------------------------------------------
+
+    Parameter M02 [expr {0}]  ;#A/m
+    set DD2 [expr {$D2}] ;# Allows for varying of DMI value through for loops in .sh file, in mJ/m^2
+
+# Set Disk 3
+
+    #---------------------------------------------------------------------
+    # Set Geometry Disk 3 - Bottom
+    #---------------------------------------------------------------------
+
+    set x3 $x
+    set y3 $y
+    set z3 [expr {1e-9}]
+    set r3 [expr {$x3/2}]
+
+    set 3thicknessby2 [expr {$z2 + $z3}]
+
+    set xCell3 2e-9
+    set yCell3 2e-9
+    set zCell3 1e-9
+
+    set xr3 [expr {$x3/2}]
+    set yr3 [expr {$y3/2}]
+    set zr3 [expr {-$z2}]
+    set nxr3 [expr {-$x3/2}]
+    set nyr3 [expr {-$y3/2}]
+    set nzr3 [expr {-$z2-$z3}] ;# Note this is where the stacking of the disks is defined
+
+    #---------------------------------------------------------------------
+    # Material Paramaters Disk 3
+    #---------------------------------------------------------------------
+
+    Parameter M03 [expr {8.6e5}]  ;#A/m
+    set DD1 [expr {$D1}] ;# Allows for varying of DMI value through for loops in .sh file, in mJ/m^2
+
+    Parameter Hc_x_uT3 0
+    set Hc_x3 [expr {$Hc_x_uT3*1e-3*795.77}]
+    Parameter Hc_y3 [expr {0*795.77}] ;#A/m (or mT by the multiplier)
+
+#
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Coding the General Energy Terms 
+#---------------------------------------------------------------------
+
+# Uniform Exchange
+Specify Oxs_UniformExchange [subst {
+    A $A
+}]
+
+# Demag
+Specify Oxs_Demag {}
+
+# Cant figure out how to set two different DMI terms for each disk FIX THIS ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    #---------------------------------------------------------------------
+    # Set Disk 1
+    #---------------------------------------------------------------------
+
+    # DMI interaction
+    #Specify Oxs_DMExchange6Ngbr:DMEx [subst {
+    #    default_D $DD1
+    #    atlas :diskt
+    #    D { 
+    #        diskt diskt $DD1
+    #    }
+    #}]
+
+    #---------------------------------------------------------------------
+    # Set Disk 2
+    #---------------------------------------------------------------------
+
+    # DMI interaction
+    #Specify Oxs_DMExchange6Ngbr:DMEx [subst {
+    #    default_D $DD2
+    #    atlas :diskb
+    #    D { 
+    #        diskb diskb $DD2
+    #    }
+    #}]
+
+
+
+# --------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------
+# RUNNING SIMULATIONS
+
+if {1 == $SimType} {
+#---------------------------------------------------------------------
+# Simulation 1: Creation of Ground State file TOP
+#--------------------------------------------------------------------- 
+    set SimName "SimTrilayerTop"
+    
+    # Topology
+    Parameter pt +1 ;# Sets the polarity of the top vortex, +1 is out of page, -1 is into page
+    Parameter qt +1 ;# Sets the Rotation of the top vortex
+    set SimNameTop "SimTrilayerTopM0"
+    set SimNameTop [subst $SimNameTop$pt$qt]
+
+    # Creates just top disk atlas
+    Specify Oxs_BoxAtlas:diskt [subst {
+        xrange { $nxr1 $xr1 }
+        yrange { $nyr1 $yr1 }
+        zrange { $nzr1 $zr1 }
+    }]
+    
+    # Create Individual Mesh
+    Specify Oxs_RectangularMesh:mesht [subst {
+        cellsize {$xCell1 $yCell1 $zCell1}
+        atlas :diskt
+    }]
+
+    # Energy Evolver
+    Specify Oxs_CGEvolve:evolver {}
+
+    # Drivers
+    Specify Oxs_MinDriver:top [subst {
+        basename $SimNameTop
+        evolver	:evolver
+        mesh :mesht
+        Ms { Oxs_ScriptScalarField {
+            script {Cyl2 $M01 $r1 $1thicknessby2}
+            atlas :diskt
+            script_args { rawpt }
+            }
+        }
+        m0 { Oxs_ScriptVectorField { 
+            script { Vortex $r1 $pt $qt}
+            atlas :diskt
+            script_args rawpt
+        }
+	}
+    stopping_mxHxm 0.1
+    }]
+
+    Destination groundstateTop mmArchive
+    Schedule Oxs_MinDriver:top:Magnetization groundstateTop Done
+    Schedule "Oxs_CGEvolve:evolver:Total energy density" groundstateTop Done
+
+
+} elseif {2==$SimType} {
+#---------------------------------------------------------------------
+# Simulation 2: Creation of Ground State file BOTTOM
+#---------------------------------------------------------------------     
+    set SimName "SimTrilayerBottom"
+    
+    # Topology
+    Parameter pb +1 ;# Sets the polarity of the bottom vortex, +1 is out of page, -1 is into page
+    Parameter qb +1 ;# Sets the Rotation of the bottom vortex
+    
+    set SimNameBottom "SimTrilayerBottomM0"
+    set SimNameBottom [subst $SimNameBottom$pb$qb]
+
+    # Creates just bottom atlas
+    Specify Oxs_BoxAtlas:diskb [subst {
+        xrange { $nxr3 $xr3 }
+        yrange { $nyr3 $yr3 }
+        zrange { $nzr3 $zr3 }
+    }]
+
+    Specify Oxs_RectangularMesh:meshb [subst {
+        cellsize {$xCell3 $yCell3 $zCell3}
+        atlas :diskb
+    }]
+
+    # Energy Evolver
+    Specify Oxs_CGEvolve:evolver {}
+
+    Specify Oxs_MinDriver:bottom [subst {
+        basename $SimNameBottom
+        evolver	:evolver
+        mesh :meshb
+        Ms { Oxs_ScriptScalarField {
+            script {Cyl2 $M03 $r3 $3thicknessby2}
+            atlas :diskb
+            script_args { rawpt }
+            }
+        }
+        m0 { Oxs_ScriptVectorField { 
+            script { Vortex $r3 $pb $qb}
+            atlas :diskb
+            script_args rawpt
+        }
+	}
+    stopping_mxHxm 0.1
+    }]
+
+    Destination groundstateBottom mmArchive
+    Schedule Oxs_MinDriver:bottom:Magnetization groundstateBottom Done
+    Schedule "Oxs_CGEvolve:evolver:Total energy density" groundstateBottom Done
+
+
+} elseif {3==$SimType || 0==$SimType} {
+#------------------------------------------------------------------------------------
+# Simulation 3 or 0: Creates Whole System atlas
+#------------------------------------------------------------------------------------
+    Specify Oxs_BoxAtlas:diskt [subst {
+        xrange { $nxr1 $xr1 }
+        yrange { $nyr1 $yr1 }
+        zrange { $nzr1 $zr1 }
+    }]
+
+    Specify Oxs_BoxAtlas:diskm [subst {
+        xrange { $nxr2 $xr2 }
+        yrange { $nyr2 $yr2 }
+        zrange { $nzr2 $zr2 }
+    }]
+
+    Specify Oxs_BoxAtlas:diskb [subst {
+        xrange { $nxr3 $xr3 }
+        yrange { $nyr3 $yr3 }
+        zrange { $nzr3 $zr3 }
+    }]
+
+    Specify Oxs_MultiAtlas:atlas {
+        atlas :diskt
+        atlas :diskm
+        atlas :diskb
+    }
+
+    Parameter m0filetop "m0filetop.omf" ;# MUST manualy Rename the ground state file produced (when SimType set to 1) to this name before running
+    Parameter m0filebottom "m0filebottom.omf" ;# alternatively you can in the .sh file automate the renaming of the magnetization file 
+
+    Specify Oxs_RectangularMesh:mesh [subst {
+        cellsize {$xCell1 $yCell1 $zCell1}
+        atlas :atlas
+    }]
+
+    # Creates Ms Values for whole system
+    Specify Oxs_AtlasScalarField:Ms [subst {
+        atlas :atlas
+        values {
+            diskt { Oxs_ScriptScalarField {
+                script {Cyl2 $M01 $r1 1thicknessby2}
+                atlas :diskt
+                script_args rawpt 
+            }}
+            diskm { Oxs_ScriptScalarField {
+                script {Cyl2 $M02 $r2 2thicknessby2}
+                atlas :diskm
+                script_args rawpt
+            }}
+            diskb { Oxs_ScriptScalarField {
+                script {Cyl2 $M03 $r3 3thicknessby2}
+                atlas :diskb
+                script_args rawpt
+            }}
+        }
+    }]
+
+    # Merging the two groundstate files into one big file for the whole atlas
+    Specify Oxs_AtlasVectorField:m0 [subst {
+        atlas :atlas
+        values {
+            diskt { Oxs_FileVectorField {
+                atlas :diskt
+                file $m0filetop
+            }}
+            diskm {0 0 0}
+            diskb { Oxs_FileVectorField {
+                atlas :diskb
+                file $m0filebottom
+            }}
+        }
+    }]
+
+    if {3 == $SimType} {
+    #---------------------------------------------------------------------
+    # Simulation 3:otal system Energy Minimization Simulation
+    #---------------------------------------------------------------------     
+        set SimName "SimTrilayerM0"
+
+        # Energy Evolver
+        Specify Oxs_CGEvolve:evolver {}
+
+        # Energy Min Driver
+        Specify Oxs_MinDriver:total [subst {
+            basename $SimName
+            evolver	:evolver
+            mesh :mesh
+            Ms :Ms
+            m0 :m0
+            stopping_mxHxm 0.1
+        }]
+
+        Destination groundstate mmArchive
+        Schedule Oxs_MinDriver:total:Magnetization groundstate Done
+        Schedule Oxs_CGEvolve:evolver:Total_energy_density groundstate Done
+
+
+    } elseif {0 == $SimType} {
+    #---------------------------------------------------------------------
+    # Simulation 0: Time Evolution Simulation
+    #---------------------------------------------------------------------
+    
+        # Excitation Pulse
+        Specify Oxs_UZeeman [subst {
+            Hrange {
+                {$Hc_x1 $Hc_y1 0 0 0 0 0 }
+            }
+        }]
+
+        Specify Oxs_ScriptUZeeman {
+           script_args {total_time}
+           script SincField
+        }
+
+        # Time Evolution drivers
+        Specify Oxs_RungeKuttaEvolve:evolver [subst {
+            alpha $alpha
+            gamma_G $gamma_G
+        }]
+
+        Specify Oxs_TimeDriver [subst {
+            basename $SimName
+            evolver :evolver
+            Ms :Ms
+            mesh :mesh
+            m0 :m0
+            stopping_time $total_time_running
+            stage_count $num_of_stages
+        }]
+
+        Destination table mmArchive
+        Destination mags mmArchive
+        Destination energy mmArchive
+
+        Schedule DataTable table Stage 1
+        Schedule Oxs_TimeDriver::Magnetization mags Stage 1
+        Schedule "Oxs_RungeKuttaEvolve:evolver:Total energy density" energy Stage 1
+    }
+} else {
+    error "Unsupported Value of SimType, accepted values are 1 for Ground state top, 2 for ground state bottom, 3 for total system ground state or 0 for running Simulation"
+}
+
+
+
+#---------------------------------------------------------------------
+# Scripts 
+#---------------------------------------------------------------------
+
+
+proc Cyl2 {M0 r0 thicknessby2 x y z} { 
+    set rpt [expr {sqrt($x*$x+$y*$y)}]
+    if {$r0 >= $rpt} { 
+        if {sqrt($z * $z)<$thicknessby2} {
+        return [subst [expr {$M0}]]
+        } else { 
+        return $M0
+        }
+    } else { 
+        return 0
+    }
+}
+
+# setting these variables is actually intended
+set x0 0
+set y0 0
+proc Vortex {r0 p q x y z } {
+   global x0 
+   global y0 
+   set xrel [expr {$x0-$x}]
+   set yrel [expr {$y0-$y}]
+   set r [expr {sqrt($xrel*$xrel+$yrel*$yrel)}]
+   set xcomp [expr {$q*$yrel}]
+   set ycomp [expr {-$q*$xrel}]
+   set rc [expr {$r0}]
+   set rplane [expr {sqrt($xcomp*$xcomp+$ycomp*$ycomp)}]
+   set numerator [expr {1-$r/$rc}]
+   set denom [expr {2*$r/$rc}]
+   if {$r == 0} {return [list 0. 0. 1.]}
+   if {$r<$rc} {set zcomp [expr {$p*$rplane*$numerator/$denom}]}
+   if {$r>=$rc} {set zcomp 0}
+   return [list $xcomp $ycomp $zcomp]
+}
+
+proc SincField { total_time } {
+    global time_excited
+    global time_relax
+    global freq0
+    global freq1
+    global freq2
+    global amplitude0
+    global amplitude1
+    global amplitude2 
+    global pi 
+    global t0rel
+    set t0 [expr {$time_relax + $t0rel}]
+    set denom [expr {2*$pi*$total_time + 2*$pi*$t0}]
+    set Hx0 [expr $amplitude0* sin($freq0*$denom)/($freq0*$denom)]
+    set Hx1 [expr $amplitude1* sin($freq1*$denom)/($freq1*$denom)]
+    set Hx2 [expr $amplitude2* sin($freq2*$denom)/($freq2*$denom)]
+    set Hx [expr {$Hx0 + $Hx1 + $Hx2}]
+    set t_eff [expr {$total_time + $t0}]
+    set dHx0 [expr {$amplitude0*(cos($freq0*$denom)/$t_eff-sin($freq0*$denom)/($freq0*$denom*$t_eff))}]
+    set dHx1 [expr {$amplitude1*(cos($freq1*$denom)/$t_eff-sin($freq1*$denom)/($freq1*$denom*$t_eff))}]
+    set dHx2 [expr {$amplitude2*(cos($freq2*$denom)/$t_eff-sin($freq2*$denom)/($freq2*$denom*$t_eff))}]
+    set dHx [expr {$dHx0 + $dHx1 + $dHx2}]
+    if {$total_time < $time_excited } {  
+        if {$total_time > $time_relax} { 
+            if {pow(($total_time-$t0)*($total_time-$t0), .5) > 1e-11} {
+                return [list $Hx 0 0 $dHx 0 0] 
+            } else { 
+                set HxTaylor0 [expr {$amplitude0*(1-pow($freq0*$denom, 2)/6 + pow($freq0*$denom,4)/120 - pow($freq0*$denom, 6)/5040 + pow($freq0*$denom, 8)/362880)}]
+                set dHxTaylor0 [expr {$amplitude0*(-2*$freq0*$denom/6 + 4*pow($freq0*$denom,3)/120 - 6*pow($freq0*$denom, 5)/5040 + 8*pow($freq0*$denom, 7)/362880)}]
+                set HxTaylor1 [expr {$amplitude1*(1-pow($freq1*$denom, 2)/6 + pow($freq1*$denom,4)/120 - pow($freq1*$denom, 6)/5040 + pow($freq1*$denom, 8)/362880)}]
+                set dHxTaylor1 [expr {$amplitude1*(-2*$freq1*$denom/6 + 4*pow($freq1*$denom,3)/120 - 6*pow($freq1*$denom, 5)/5040 + 8*pow($freq1*$denom, 7)/362880)}]
+                set HxTaylor2 [expr {$amplitude2*(1-pow($freq2*$denom, 2)/6 + pow($freq2*$denom,4)/120 - pow($freq2*$denom, 6)/5040 + pow($freq2*$denom, 8)/362880)}]
+                set dHxTaylor2 [expr {$amplitude2*(-2*$freq2*$denom/6 + 4*pow($freq2*$denom,3)/120 - 6*pow($freq2*$denom, 5)/5040 + 8*pow($freq2*$denom, 7)/362880)}]
+                set HxTaylor [expr {$HxTaylor0 + $HxTaylor1 + $HxTaylor2}]
+                set dHxTaylor [expr {$dHxTaylor0 + $dHxTaylor1 + $dHxTaylor2}]
+                return [list $HxTaylor 0 0 $dHxTaylor 0 0]
+            }
+        } else {
+            return [list 0 0 0 0 0 0]
+        }
+    } else { 
+        return [list 0 0 0 0 0 0]
+    }   
+}
