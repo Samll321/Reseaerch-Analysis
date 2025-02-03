@@ -439,8 +439,8 @@ if {1 == $SimType} {
 
 # NOTE: only use this if the spacer layer is at thickness FIX THIS so that only the touching surfaces of the two disks are included instead of the whole disk. 
         Specify Oxs_TwoSurfaceExchange [subst {
-            sigma 0 ;# Vary this parameter
-            sigma2 0 ;# This is always set to zero for interface exchange
+            sigma 0 
+            sigma2 0 
             surface1 {
                 atlas :atlas
                 region :diskt
