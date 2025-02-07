@@ -218,9 +218,11 @@ if {1 == $SimType} {
         atlas :diskt
     }]
 
-    # Uniform Exchange
-    Specify Oxs_UniformExchange [subst {
-        A $A
+    Specify Oxs_Exchange6Nsgbr [subst {
+        atlas :atlas
+        A {
+            diskt diskt $A
+        }
     }]
 
     # Demag
@@ -279,10 +281,13 @@ if {1 == $SimType} {
         atlas :diskb
     }]
 
-    # Uniform Exchange
-    Specify Oxs_UniformExchange [subst {
-        A $A
+    Specify Oxs_Exchange6Ngbr [subst {
+        atlas :atlas
+        A {
+            diskb diskb $A
+        }
     }]
+
 
     # Demag
     Specify Oxs_Demag {}
@@ -351,12 +356,13 @@ if {1 == $SimType} {
     }]
 
     # Exchange in disks
+    # NOTE: this causes simulation to diverge
     Specify Oxs_Exchange6Ngbr [subst {
         atlas :atlas
         A {
-            diskt diskt $A
-            diskt diskb 0
-            diskb diskb $A
+           diskt diskt $A
+           diskt diskb 0
+           diskb diskb $A
         }
     }]
 
@@ -442,20 +448,20 @@ if {1 == $SimType} {
             norm 1.0
         }
 
-        # NOTE: only use this if the spacer layer is at thickness FIX THIS so that only the touching surfaces of the two disks are included instead of the whole disk. 
+        # NOTE: ONLY USE WHEN spacer width is zero
         Specify Oxs_TwoSurfaceExchange [subst {
             sigma 0 
             sigma2 0 
             surface1 {
                 atlas :atlas
-                region :diskt
+                region diskt
                 scalarfield :zheight
                 scalarvalue 0
                 scalarside >=
             }
             surface2 {
                 atlas :atlas
-                region :diskb
+                region diskb
                 scalarfield :zheight
                 scalarvalue 0
                 scalarside <=
