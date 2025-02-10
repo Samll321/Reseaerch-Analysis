@@ -37,7 +37,7 @@ Parameter gamma_G [expr {2.21e5}]
 #---------------------------------------------------------------------
 
 set time_relax 0 ;#s
-set time_excited 10e-9;#s
+set time_excited 10e-9;# s, time when the excitation starts
 set freq0 100e9 ;# frequency of excitation in Hz*2pi
 set amplitude0 795.77 ;#units A/m 
 set freq1 20e9
@@ -60,7 +60,7 @@ set y [expr {500e-9}]
 
     set x1 $x
     set y1 $y
-    set z1 [expr {1e-9}]
+    set z1 [expr {1e-9}] 
     set r1 [expr {$x1/2}]
 
     set 1thicknessby2 [expr {1e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
@@ -99,7 +99,7 @@ set y [expr {500e-9}]
 
     set x2 $x
     set y2 $y
-    set z2 [expr {0}]
+    set z2 [expr {1e-9}]
     set r2 [expr {$x2/2}]
 
     set 2thicknessby2 [expr {2e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
@@ -218,8 +218,8 @@ if {1 == $SimType} {
         atlas :diskt
     }]
 
-    Specify Oxs_Exchange6Nsgbr [subst {
-        atlas :atlas
+    Specify Oxs_Exchange6Ngbr [subst {
+        atlas :diskt
         A {
             diskt diskt $A
         }
@@ -282,7 +282,7 @@ if {1 == $SimType} {
     }]
 
     Specify Oxs_Exchange6Ngbr [subst {
-        atlas :atlas
+        atlas :diskb
         A {
             diskb diskb $A
         }
@@ -358,6 +358,7 @@ if {1 == $SimType} {
     # Exchange in disks
     # NOTE: this causes simulation to diverge
     Specify Oxs_Exchange6Ngbr [subst {
+        default_A $A
         atlas :atlas
         A {
            diskt diskt $A
@@ -485,7 +486,7 @@ if {1 == $SimType} {
             Ms :Ms
             mesh :mesh
             m0 :m0
-            stopping_time $total_time_running
+            stopping_time $stage_length
             stage_count $num_of_stages
         }]
 
