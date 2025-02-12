@@ -46,7 +46,6 @@ set freq2 20e9
 set amplitude2 0
 set t0rel -0.4e-9
 
-#---------------------------------------------------------------------------------------------------------------------------------------
 # Set Disk Dimensions
 
 set x [expr {500e-9}]
@@ -67,7 +66,7 @@ set y [expr {500e-9}]
 
     set xCell1 2e-9
     set yCell1 2e-9
-    set zCell1 1e-9
+    set zCell1 0.1e-9
 
     set xr1 [expr {$x1/2}]
     set yr1 [expr {$y1/2}]
@@ -106,7 +105,7 @@ set y [expr {500e-9}]
 
     set xCell2 2e-9
     set yCell2 2e-9
-    set zCell2 1e-9
+    set zCell2 0.1e-9
 
     set xr2 [expr {$x2/2}]
     set yr2 [expr {$y2/2}]
@@ -188,15 +187,11 @@ set y [expr {500e-9}]
     #}]
 
 
-
-# --------------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------------
 # RUNNING SIMULATIONS
 
 if {1 == $SimType} {
-#---------------------------------------------------------------------
 # Simulation 1: Creation of Ground State file TOP
-#--------------------------------------------------------------------- 
+ 
     set SimName "SimTrilayerTop"
     
     # Topology
@@ -257,9 +252,8 @@ if {1 == $SimType} {
 
 
 } elseif {2==$SimType} {
-#---------------------------------------------------------------------
 # Simulation 2: Creation of Ground State file BOTTOM
-#---------------------------------------------------------------------     
+
     set SimName "SimTrilayerBottom"
     
     # Topology
@@ -320,9 +314,8 @@ if {1 == $SimType} {
 
 
 } elseif {3==$SimType || 0==$SimType} {
-#------------------------------------------------------------------------------------
 # Simulation 3 or 0: Creates Whole System atlas
-#------------------------------------------------------------------------------------
+
     Specify Oxs_BoxAtlas:diskt [subst {
         xrange { $nxr1 $xr1 }
         yrange { $nyr1 $yr1 }
@@ -409,9 +402,8 @@ if {1 == $SimType} {
     }]
 
     if {3 == $SimType} {
-    #---------------------------------------------------------------------
     # Simulation 3: Total System Energy Minimization Simulation
-    #---------------------------------------------------------------------     
+
         set SimName "SimTrilayerM0"
 
         # Energy Evolver
@@ -433,9 +425,7 @@ if {1 == $SimType} {
 
 
     } elseif {0 == $SimType} {
-    #---------------------------------------------------------------------
     # Simulation 0: Time Evolution Simulation
-    #---------------------------------------------------------------------
     
         # Excitation Pulse
         Specify Oxs_UZeeman [subst {
@@ -502,88 +492,83 @@ if {1 == $SimType} {
     error "Unsupported Value of SimType, accepted values are 1 for producing the Ground state top, 2 for ground state bottom, 3 for total system ground state or 0 for running time simulation"
 }
 
-
-
-#---------------------------------------------------------------------
 # Scripts 
-#---------------------------------------------------------------------
 
-
-proc Cyl2 {M0 r0 thicknessby2 x y z} { 
-    set rpt [expr {sqrt($x*$x+$y*$y)}]
-    if {$r0 >= $rpt} { 
-        if {sqrt($z * $z)<$thicknessby2} {
-        return [subst [expr {$M0}]]
-        } else { 
-        return $M0
-        }
-    } else { 
-        return 0
-    }
-}
-
-# setting these variables is actually intended
-set x0 0
-set y0 0
-proc Vortex {r0 p q x y z } {
-   global x0 
-   global y0 
-   set xrel [expr {$x0-$x}]
-   set yrel [expr {$y0-$y}]
-   set r [expr {sqrt($xrel*$xrel+$yrel*$yrel)}]
-   set xcomp [expr {$q*$yrel}]
-   set ycomp [expr {-$q*$xrel}]
-   set rc [expr {$r0}]
-   set rplane [expr {sqrt($xcomp*$xcomp+$ycomp*$ycomp)}]
-   set numerator [expr {1-$r/$rc}]
-   set denom [expr {2*$r/$rc}]
-   if {$r == 0} {return [list 0. 0. 1.]}
-   if {$r<$rc} {set zcomp [expr {$p*$rplane*$numerator/$denom}]}
-   if {$r>=$rc} {set zcomp 0}
-   return [list $xcomp $ycomp $zcomp]
-}
-
-proc SincField { total_time } {
-    global time_excited
-    global time_relax
-    global freq0
-    global freq1
-    global freq2
-    global amplitude0
-    global amplitude1
-    global amplitude2 
-    global pi 
-    global t0rel
-    set t0 [expr {$time_relax + $t0rel}]
-    set denom [expr {2*$pi*$total_time + 2*$pi*$t0}]
-    set Hx0 [expr $amplitude0* sin($freq0*$denom)/($freq0*$denom)]
-    set Hx1 [expr $amplitude1* sin($freq1*$denom)/($freq1*$denom)]
-    set Hx2 [expr $amplitude2* sin($freq2*$denom)/($freq2*$denom)]
-    set Hx [expr {$Hx0 + $Hx1 + $Hx2}]
-    set t_eff [expr {$total_time + $t0}]
-    set dHx0 [expr {$amplitude0*(cos($freq0*$denom)/$t_eff-sin($freq0*$denom)/($freq0*$denom*$t_eff))}]
-    set dHx1 [expr {$amplitude1*(cos($freq1*$denom)/$t_eff-sin($freq1*$denom)/($freq1*$denom*$t_eff))}]
-    set dHx2 [expr {$amplitude2*(cos($freq2*$denom)/$t_eff-sin($freq2*$denom)/($freq2*$denom*$t_eff))}]
-    set dHx [expr {$dHx0 + $dHx1 + $dHx2}]
-    if {$total_time < $time_excited } {  
-        if {$total_time > $time_relax} { 
-            if {pow(($total_time-$t0)*($total_time-$t0), .5) > 1e-11} {
-                return [list $Hx 0 0 $dHx 0 0] 
+    proc Cyl2 {M0 r0 thicknessby2 x y z} { 
+        set rpt [expr {sqrt($x*$x+$y*$y)}]
+        if {$r0 >= $rpt} { 
+            if {sqrt($z * $z)<$thicknessby2} {
+            return [subst [expr {$M0}]]
             } else { 
-                set HxTaylor0 [expr {$amplitude0*(1-pow($freq0*$denom, 2)/6 + pow($freq0*$denom,4)/120 - pow($freq0*$denom, 6)/5040 + pow($freq0*$denom, 8)/362880)}]
-                set dHxTaylor0 [expr {$amplitude0*(-2*$freq0*$denom/6 + 4*pow($freq0*$denom,3)/120 - 6*pow($freq0*$denom, 5)/5040 + 8*pow($freq0*$denom, 7)/362880)}]
-                set HxTaylor1 [expr {$amplitude1*(1-pow($freq1*$denom, 2)/6 + pow($freq1*$denom,4)/120 - pow($freq1*$denom, 6)/5040 + pow($freq1*$denom, 8)/362880)}]
-                set dHxTaylor1 [expr {$amplitude1*(-2*$freq1*$denom/6 + 4*pow($freq1*$denom,3)/120 - 6*pow($freq1*$denom, 5)/5040 + 8*pow($freq1*$denom, 7)/362880)}]
-                set HxTaylor2 [expr {$amplitude2*(1-pow($freq2*$denom, 2)/6 + pow($freq2*$denom,4)/120 - pow($freq2*$denom, 6)/5040 + pow($freq2*$denom, 8)/362880)}]
-                set dHxTaylor2 [expr {$amplitude2*(-2*$freq2*$denom/6 + 4*pow($freq2*$denom,3)/120 - 6*pow($freq2*$denom, 5)/5040 + 8*pow($freq2*$denom, 7)/362880)}]
-                set HxTaylor [expr {$HxTaylor0 + $HxTaylor1 + $HxTaylor2}]
-                set dHxTaylor [expr {$dHxTaylor0 + $dHxTaylor1 + $dHxTaylor2}]
-                return [list $HxTaylor 0 0 $dHxTaylor 0 0]
+            return $M0
             }
-        } else {
-            return [list 0 0 0 0 0 0]
+        } else { 
+            return 0
         }
-    } else { 
-        return [list 0 0 0 0 0 0]
-    }   
-}
+    }
+
+    # setting these variables is actually intended
+    set x0 0
+    set y0 0
+    proc Vortex {r0 p q x y z } {
+    global x0 
+    global y0 
+    set xrel [expr {$x0-$x}]
+    set yrel [expr {$y0-$y}]
+    set r [expr {sqrt($xrel*$xrel+$yrel*$yrel)}]
+    set xcomp [expr {$q*$yrel}]
+    set ycomp [expr {-$q*$xrel}]
+    set rc [expr {$r0}]
+    set rplane [expr {sqrt($xcomp*$xcomp+$ycomp*$ycomp)}]
+    set numerator [expr {1-$r/$rc}]
+    set denom [expr {2*$r/$rc}]
+    if {$r == 0} {return [list 0. 0. 1.]}
+    if {$r<$rc} {set zcomp [expr {$p*$rplane*$numerator/$denom}]}
+    if {$r>=$rc} {set zcomp 0}
+    return [list $xcomp $ycomp $zcomp]
+    }
+
+    proc SincField { total_time } {
+        global time_excited
+        global time_relax
+        global freq0
+        global freq1
+        global freq2
+        global amplitude0
+        global amplitude1
+        global amplitude2 
+        global pi 
+        global t0rel
+        set t0 [expr {$time_relax + $t0rel}]
+        set denom [expr {2*$pi*$total_time + 2*$pi*$t0}]
+        set Hx0 [expr $amplitude0* sin($freq0*$denom)/($freq0*$denom)]
+        set Hx1 [expr $amplitude1* sin($freq1*$denom)/($freq1*$denom)]
+        set Hx2 [expr $amplitude2* sin($freq2*$denom)/($freq2*$denom)]
+        set Hx [expr {$Hx0 + $Hx1 + $Hx2}]
+        set t_eff [expr {$total_time + $t0}]
+        set dHx0 [expr {$amplitude0*(cos($freq0*$denom)/$t_eff-sin($freq0*$denom)/($freq0*$denom*$t_eff))}]
+        set dHx1 [expr {$amplitude1*(cos($freq1*$denom)/$t_eff-sin($freq1*$denom)/($freq1*$denom*$t_eff))}]
+        set dHx2 [expr {$amplitude2*(cos($freq2*$denom)/$t_eff-sin($freq2*$denom)/($freq2*$denom*$t_eff))}]
+        set dHx [expr {$dHx0 + $dHx1 + $dHx2}]
+        if {$total_time < $time_excited } {  
+            if {$total_time > $time_relax} { 
+                if {pow(($total_time-$t0)*($total_time-$t0), .5) > 1e-11} {
+                    return [list $Hx 0 0 $dHx 0 0] 
+                } else { 
+                    set HxTaylor0 [expr {$amplitude0*(1-pow($freq0*$denom, 2)/6 + pow($freq0*$denom,4)/120 - pow($freq0*$denom, 6)/5040 + pow($freq0*$denom, 8)/362880)}]
+                    set dHxTaylor0 [expr {$amplitude0*(-2*$freq0*$denom/6 + 4*pow($freq0*$denom,3)/120 - 6*pow($freq0*$denom, 5)/5040 + 8*pow($freq0*$denom, 7)/362880)}]
+                    set HxTaylor1 [expr {$amplitude1*(1-pow($freq1*$denom, 2)/6 + pow($freq1*$denom,4)/120 - pow($freq1*$denom, 6)/5040 + pow($freq1*$denom, 8)/362880)}]
+                    set dHxTaylor1 [expr {$amplitude1*(-2*$freq1*$denom/6 + 4*pow($freq1*$denom,3)/120 - 6*pow($freq1*$denom, 5)/5040 + 8*pow($freq1*$denom, 7)/362880)}]
+                    set HxTaylor2 [expr {$amplitude2*(1-pow($freq2*$denom, 2)/6 + pow($freq2*$denom,4)/120 - pow($freq2*$denom, 6)/5040 + pow($freq2*$denom, 8)/362880)}]
+                    set dHxTaylor2 [expr {$amplitude2*(-2*$freq2*$denom/6 + 4*pow($freq2*$denom,3)/120 - 6*pow($freq2*$denom, 5)/5040 + 8*pow($freq2*$denom, 7)/362880)}]
+                    set HxTaylor [expr {$HxTaylor0 + $HxTaylor1 + $HxTaylor2}]
+                    set dHxTaylor [expr {$dHxTaylor0 + $dHxTaylor1 + $dHxTaylor2}]
+                    return [list $HxTaylor 0 0 $dHxTaylor 0 0]
+                }
+            } else {
+                return [list 0 0 0 0 0 0]
+            }
+        } else { 
+            return [list 0 0 0 0 0 0]
+        }   
+    }
