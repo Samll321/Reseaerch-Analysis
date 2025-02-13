@@ -64,8 +64,8 @@ set y [expr {500e-9}]
 
     set 1thicknessby2 [expr {1e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
 
-    set xCell1 2e-9
-    set yCell1 2e-9
+    set xCell1 5e-9
+    set yCell1 5e-9
     set zCell1 0.2e-9
 
     set xr1 [expr {$x1/2}]
@@ -103,8 +103,8 @@ set y [expr {500e-9}]
 
     set 2thicknessby2 [expr {2e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
 
-    set xCell2 2e-9 
-    set yCell2 2e-9
+    set xCell2 5e-9 
+    set yCell2 5e-9
     set zCell2 0.2e-9 
 
     set xr2 [expr {$x2/2}]
@@ -134,8 +134,8 @@ set y [expr {500e-9}]
 
     set 3thicknessby2 [expr {$z2 + $z3}]
 
-    set xCell3 2e-9 
-    set yCell3 2e-9 
+    set xCell3 5e-9 
+    set yCell3 5e-9 
     set zCell3 0.2e-9
 
     set xr3 [expr {$x3/2}]
