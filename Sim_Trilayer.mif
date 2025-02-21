@@ -491,6 +491,8 @@ if {1 == $SimType} {
 
 } elseif {4 == $SimType} {
 
+    Parameter m0filetop "m0filetop.omf"
+
     Specify Oxs_BoxAtlas:atlas [subst {
         xrange { $nxr1 $xr1 }
         yrange { $nyr1 $yr1 }
@@ -506,7 +508,7 @@ if {1 == $SimType} {
         default_A $A
         atlas :atlas
         A {
-           diskt diskt $A
+           atlas atlas $A
         }
     }]
 
