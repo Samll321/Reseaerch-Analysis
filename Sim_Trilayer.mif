@@ -492,13 +492,13 @@ if {1 == $SimType} {
 } elseif {4 == $SimType || 5==$SimType } {
     #Setting up single disk simulation
 
-    set diam = 130e-9 
-    set height = 20e-9
-    set radius = [expr $diam/2]
-    set halfThick = [expr $height/2]
+    set diam 130e-9 
+    set height 20e-9
+    set radius [expr $diam/2]
+    set halfThick [expr $height/2]
 
-    set cellDiam = 2.5e-9
-    set cellHeight = 5e-9
+    set cellDiam 2.5e-9
+    set cellHeight 5e-9
 
     Specify Oxs_BoxAtlas:atlas [subst {
         xrange {[expr {$diam/2}] [expr {-$diam/2}]}
