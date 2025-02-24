@@ -503,7 +503,7 @@ if {1 == $SimType} {
     Specify Oxs_BoxAtlas:atlas [subst {
         xrange {[expr {-$diam/2}] [expr {$diam/2}]}
         yrange {[expr {-$diam/2}] [expr {$diam/2}]}
-        zrange {[expr {-$height/2}] [expr {$diam/2}]}
+        zrange {[expr {-$height/2}] [expr {$height/2}]}
     }]
 
     Specify Oxs_RectangularMesh:mesh [subst {
@@ -511,13 +511,17 @@ if {1 == $SimType} {
         atlas :atlas
     }]
 
-    Specify Oxs_Exchange6Ngbr [subst {
-        default_A $A
-        atlas :atlas
-        A {
-           atlas atlas $A
-        }
-    }]
+    Specify Oxs_UniformExchange {
+        A $A 
+    }
+
+    #Specify Oxs_Exchange6Ngbr [subst {
+    #    default_A $A
+    #    atlas :atlas
+    #    A {
+    #       atlas atlas $A
+    #    }
+    #}]
 
     # Demag
     Specify Oxs_Demag {}
