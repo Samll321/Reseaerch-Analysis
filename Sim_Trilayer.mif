@@ -14,7 +14,7 @@ Parameter SimName SimTrilayer
 Parameter D1 0 ;#set the DMI constant D for Disk 1, this can be set through the acompanying .sh file my passing a variable when calling the .sh file Ex: sbatch runSim_VortexDMI.sh 0 <- this is D value
 Parameter D2 0 ;#set the DMI constant D for Disk 2
 
-Parameter SimType 0 ;#sets type of simulation, 1 creates the top disk ground state file, 2 creates the bottom ground state file, 0 runs the simulation with the created ground state, 3 generates the full system ground state from the top and bottom ground states
+Parameter SimType 4 ;#sets type of simulation, 1 creates the top disk ground state file, 2 creates the bottom ground state file, 0 runs the simulation with the created ground state, 3 generates the full system ground state from the top and bottom ground states
 
 #---------------------------------------------------------------------
 # Simulation Length and Data output 
@@ -495,15 +495,15 @@ if {1 == $SimType} {
     set diam 130e-9 
     set height 20e-9
     set radius [expr $diam/2]
-    set halfThick [expr $height/2]
+    set halfHeight [expr $height/2]
 
     set cellDiam 2.5e-9
     set cellHeight 5e-9
 
     Specify Oxs_BoxAtlas:atlas [subst {
-        xrange {[expr {$diam/2}] [expr {-$diam/2}]}
-        yrange {[expr {$diam/2}] [expr {-$diam/2}]}
-        zrange {[expr {$height/2}] [expr {-$height/2}]}
+        xrange {[expr {-$diam/2}] [expr {$diam/2}]}
+        yrange {[expr {-$diam/2}] [expr {$diam/2}]}
+        zrange {[expr {-$height/2}] [expr {$diam/2}]}
     }]
 
     Specify Oxs_RectangularMesh:mesh [subst {
@@ -522,7 +522,7 @@ if {1 == $SimType} {
     # Demag
     Specify Oxs_Demag {}
 
-    if {4 == $SimType}{
+    if {4 == $SimType} {
         # Setting up ground state for single disk
 
         set SimNameTop "SimDiskM0"
