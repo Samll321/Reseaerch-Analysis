@@ -21,9 +21,9 @@ mkdir Projects/Trilayer/Magnetization\ Data\ Total
 
 tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 5" -restart 0 -threads 20
 
-tclsh oommf.tcl avf2odt -average "point" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
 
-tclsh oommf.tcl avf2odt -average "point" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
 
 cd Projects/Trilayer/Simulation
 

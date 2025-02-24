@@ -511,9 +511,9 @@ if {1 == $SimType} {
         atlas :atlas
     }]
 
-    Specify Oxs_UniformExchange {
+    Specify Oxs_UniformExchange [subst {
         A $A 
-    }
+    }]
 
     #Specify Oxs_Exchange6Ngbr [subst {
     #    default_A $A
