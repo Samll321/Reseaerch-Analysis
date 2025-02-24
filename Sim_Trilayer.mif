@@ -536,7 +536,7 @@ if {1 == $SimType} {
 
         # Drivers
         Specify Oxs_MinDriver:driver [subst {
-            basename $SimName
+            basename $SimNameTop
             evolver	:evolver
             mesh :mesh
             Ms { Oxs_ScriptScalarField {
