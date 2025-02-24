@@ -38,7 +38,7 @@ Parameter gamma_G [expr {2.21e5}]
 
 set time_relax 0 ;#s
 set time_excited 10e-9;# s, time when the excitation starts
-set freq0 100e9 ;# frequency of excitation in Hz*2pi
+set freq0 20e9 ;# frequency of excitation in Hz*2pi
 set amplitude0 795.77 ;#units A/m 
 set freq1 20e9
 set amplitude1 0
