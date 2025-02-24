@@ -28,8 +28,8 @@ set num_of_stages [expr int($num_of_stages_)]
 #---------------------------------------------------------------------
 # Evolution Parameters
 #---------------------------------------------------------------------
-Parameter A [expr {1.5e-11}]  ;#J/m
-Parameter alpha [expr {.008}]
+Parameter A [expr {1.05e-11}]  ;#J/m
+Parameter alpha [expr {0.008}]
 Parameter gamma_G [expr {2.21e5}]
 
 #---------------------------------------------------------------------
@@ -79,7 +79,7 @@ set y [expr {250e-9}]
     # Material Paramaters Disk 1
     #---------------------------------------------------------------------
 
-    Parameter M01 [expr {8.6e5}]  ;#A/m
+    Parameter M01 [expr {8.1e5}]  ;#A/m
     set DD1 [expr {$D1}] ;# Allows for varying of DMI value through for loops in .sh file, in mJ/m^2
     set sigma1 1 ;# FIX THIS fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
@@ -489,18 +489,25 @@ if {1 == $SimType} {
         Schedule "Oxs_RungeKuttaEvolve:evolver:Total energy density" energy Stage 1
     }
 
-} elseif {4 == $SimType} {
+} elseif {4 == $SimType || 5==$SimType } {
+    #Setting up single disk simulation
 
-    Parameter m0filetop "m0filetop.omf"
+    set diam = 130e-9 
+    set height = 20e-9
+    set radius = [expr $diam/2]
+    set halfThick = [expr $height/2]
+
+    set cellDiam = 2.5e-9
+    set cellHeight = 5e-9
 
     Specify Oxs_BoxAtlas:atlas [subst {
-        xrange { $nxr1 $xr1 }
-        yrange { $nyr1 $yr1 }
-        zrange { $nzr1 $zr1 }
+        xrange {[expr {$diam/2}] [expr {-$diam/2}]}
+        yrange {[expr {$diam/2}] [expr {-$diam/2}]}
+        zrange {[expr {$height/2}] [expr {-$height/2}]}
     }]
 
     Specify Oxs_RectangularMesh:mesh [subst {
-        cellsize {$xCell1 $yCell1 $zCell1}
+        cellsize {$cellDiam $cellDiam $cellHeight}
         atlas :atlas
     }]
 
@@ -515,34 +522,65 @@ if {1 == $SimType} {
     # Demag
     Specify Oxs_Demag {}
 
-    # Creates Ms Values for whole system
-    Specify Oxs_AtlasScalarField:Ms [subst {
-        atlas :atlas
-        values {
-            atlas { Oxs_ScriptScalarField {
-                script {Cyl2 $M01 $r1 1thicknessby2}
+    if {4 == $SimType}{
+        # Setting up ground state for single disk
+
+        set SimNameTop "SimDiskM0"
+    
+        # Topology
+        Parameter pt +1 ;# Sets the polarity of the top vortex, +1 is out of page, -1 is into page
+        Parameter qt +1 ;# Sets the Rotation of the top vortex
+        
+        # Energy Evolver
+        Specify Oxs_CGEvolve:evolver {}
+
+        # Drivers
+        Specify Oxs_MinDriver:driver [subst {
+            basename $SimName
+            evolver	:evolver
+            mesh :mesh
+            Ms { Oxs_ScriptScalarField {
+                script {Cyl2 $M01 $radius $halfHeight}
                 atlas :atlas
-                script_args rawpt 
-            }}
-        }
-    }]
-
-    # Merging the two groundstate files into one big file for the whole atlas
-    Specify Oxs_AtlasVectorField:m0 [subst {
-        atlas :atlas
-        values {
-            atlas { Oxs_FileVectorField {
+                script_args { rawpt }
+                }
+            }
+            m0 { Oxs_ScriptVectorField { 
+                script { Vortex $radius $pt $qt}
                 atlas :atlas
-                file $m0filetop
-            }}
+                script_args { rawpt }
+            }   
         }
-    }]
+            stopping_mxHxm 0.1
+        }]
+
+        Destination groundstateTop mmArchive
+        Schedule Oxs_MinDriver:driver:Magnetization groundstateTop Done
+        Schedule "Oxs_CGEvolve:evolver:Total energy density" groundstateTop Done
+
+    } elseif {5==$SimType} {
+        Parameter m0filedisk "m0fileDisk.omf"
+
+        # Creates Ms Values for whole system
+        Specify Oxs_AtlasScalarField:Ms [subst {
+            atlas :atlas
+            values {
+                atlas { Oxs_ScriptScalarField {
+                    script {Cyl2 $M01 $radius $halfHeight}
+                    atlas :atlas
+                    script_args rawpt 
+                }}
+            }
+        }]
 
 
-    # Excitation Pulse
-        Specify Oxs_UZeeman [subst {
-            Hrange {
-                {$Hc_x1 $Hc_y1 0 0 0 0 0 }
+        Specify Oxs_AtlasVectorField:m0 [subst {
+            atlas :atlas
+            values {
+                atlas { Oxs_FileVectorField {
+                    atlas :atlas
+                    file $m0filedisk
+                }}
             }
         }]
 
@@ -575,6 +613,8 @@ if {1 == $SimType} {
         Schedule Oxs_TimeDriver::Magnetization mags Stage 1
         Schedule "Oxs_RungeKuttaEvolve:evolver:Total energy density" energy Stage 1
 
+    }
+    
 } else {
     error "Unsupported Value of SimType, accepted values are 1 for producing the Ground state top, 2 for ground state bottom, 3 for total system ground state, 4 for running single disk time simulation, 0 for running trilayer time simulation"
 }

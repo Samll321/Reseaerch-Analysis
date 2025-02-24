@@ -7,11 +7,11 @@
 
 cd ~/Desktop/oommf
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 1 pt $1 qt $2" -restart 0 -threads 20
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 4 pt $1 qt $2" -restart 0 -threads 20
 
 cd Projects/Trilayer/Simulation
 
-mv -i SimTrilayerTopM0*.omf m0filetop.omf
+mv -i SimDiskM0*.omf m0fileDisk.omf
 
 cd ~/Desktop/oommf
 
@@ -19,7 +19,7 @@ mkdir Projects/Trilayer/Energy\ Data\ Total
 
 mkdir Projects/Trilayer/Magnetization\ Data\ Total
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 4" -restart 0 -threads 20
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 5" -restart 0 -threads 20
 
 tclsh oommf.tcl avf2odt -average "point" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
 
