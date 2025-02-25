@@ -48,8 +48,8 @@ set t0rel -0.4e-9
 
 # Set Disk Dimensions
 
-set x [expr {250e-9}]
-set y [expr {250e-9}]
+set x [expr {130e-9}]
+set y [expr {130e-9}]
 
 # Set Disk 1
 
@@ -59,7 +59,7 @@ set y [expr {250e-9}]
 
     set x1 $x
     set y1 $y
-    set z1 [expr {3e-9}] 
+    set z1 [expr {4e-9}] 
     set r1 [expr {$x1/2}]
 
     set 1thicknessby2 [expr {1e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
@@ -129,7 +129,7 @@ set y [expr {250e-9}]
 
     set x3 $x
     set y3 $y
-    set z3 [expr {3e-9}]
+    set z3 [expr {4e-9}]
     set r3 [expr {$x3/2}]
 
     set 3thicknessby2 [expr {$z2 + $z3}]
