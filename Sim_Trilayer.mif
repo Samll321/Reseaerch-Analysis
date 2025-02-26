@@ -511,19 +511,13 @@ if {1 == $SimType} {
         atlas :atlas
     }]
 
-
-    # Can Use either unifrom exchange or 6 ngbr
-    Specify Oxs_UniformExchange [subst {
-        A $A 
+    Specify Oxs_Exchange6Ngbr [subst {
+        default_A $A
+        atlas :atlas
+           A {
+            atlas atlas $A
+        }
     }]
-
-    #Specify Oxs_Exchange6Ngbr [subst {
-    #    default_A $A
-    #    atlas :atlas
-    #    A {
-    #       atlas atlas $A
-    #    }
-    #}]
 
     # Demag
     Specify Oxs_Demag {}
