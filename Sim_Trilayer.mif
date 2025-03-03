@@ -343,21 +343,10 @@ if {1 == $SimType} {
     Parameter m0filetop "m0filetop.omf" ;# MUST manualy Rename the ground state file produced (when SimType set to 1) to this name before running
     Parameter m0filebottom "m0filebottom.omf" ;# alternatively you can in the .sh file automate the renaming of the magnetization file 
 
-    Specify Oxs_RectangularMesh:mesht [subst {
+    Specify Oxs_RectangularMesh:mesh [subst {
         cellsize {$xCell1 $yCell1 $zCell1}
-        atlas :diskt
+        atlas atlas
     }]
-
-    Specify Oxs_RectangularMesh:meshb [subst {
-        cellsize {$xCell2 $yCell2 $zCell2}
-        atlas :diskm
-    }]
-
-    Specify Oxs_RectangularMesh:meshb [subst {
-        cellsize {$xCell3 $yCell3 $zCell3}
-        atlas :diskb
-    }]
-
 
     # Exchange in disks
     # NOTE: this causes simulation to diverge
