@@ -1,0 +1,11 @@
+Set Sigma one to the origional exchange value 
+    or 
+try system with large spacer to decouple the two disks and see if we get single disk plot, 
+this requires the cretion of a new mesh with one cell for very large spacer.
+
+
+
+
+
+try system with large spacer to decouple the two disks and see if we get single disk plot, 
+this requires the cretion of a new mesh with one cell for very large spacer.

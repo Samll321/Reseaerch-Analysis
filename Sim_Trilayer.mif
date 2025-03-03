@@ -98,14 +98,14 @@ set y [expr {130e-9}]
 
     set x2 $x
     set y2 $y
-    set z2 [expr {1e-9}]
+    set z2 [expr {10e-9}]
     set r2 [expr {$x2/2}]
 
     set 2thicknessby2 [expr {2e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
 
-    set xCell2 2.5e-9 
-    set yCell2 2.5e-9
-    set zCell2 1e-9 
+    set xCell2 65e-9 
+    set yCell2 65e-9
+    set zCell2 10e-9 
 
     set xr2 [expr {$x2/2}]
     set yr2 [expr {$y2/2}]
@@ -149,7 +149,7 @@ set y [expr {130e-9}]
     # Material Paramaters Disk 3
     #---------------------------------------------------------------------
 
-    Parameter M03 [expr {8.6e5}]  ;#A/m
+    Parameter M03 [expr {8.1e5}]  ;#A/m
     set DD1 [expr {$D1}] ;# Allows for varying of DMI value through for loops in .sh file, in mJ/m^2
 
     Parameter Hc_x_uT3 0
@@ -343,10 +343,21 @@ if {1 == $SimType} {
     Parameter m0filetop "m0filetop.omf" ;# MUST manualy Rename the ground state file produced (when SimType set to 1) to this name before running
     Parameter m0filebottom "m0filebottom.omf" ;# alternatively you can in the .sh file automate the renaming of the magnetization file 
 
-    Specify Oxs_RectangularMesh:mesh [subst {
+    Specify Oxs_RectangularMesh:mesht [subst {
         cellsize {$xCell1 $yCell1 $zCell1}
-        atlas :atlas
+        atlas :diskt
     }]
+
+    Specify Oxs_RectangularMesh:meshb [subst {
+        cellsize {$xCell2 $yCell2 $zCell2}
+        atlas :diskm
+    }]
+
+    Specify Oxs_RectangularMesh:meshb [subst {
+        cellsize {$xCell3 $yCell3 $zCell3}
+        atlas :diskb
+    }]
+
 
     # Exchange in disks
     # NOTE: this causes simulation to diverge
@@ -439,7 +450,7 @@ if {1 == $SimType} {
             norm 1.0
         }
 
-        # NOTE: ONLY USE WHEN spacer width is zero
+        # NOTE: ONLY USE WHEN spacer width isnt zero
         Specify Oxs_TwoSurfaceExchange [subst {
             sigma 0 
             sigma2 0 
