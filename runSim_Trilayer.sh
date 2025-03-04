@@ -86,21 +86,21 @@ mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Total
 
 mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Total
 
-mkdir Projects/Trilayer/Trilayer_$spacer1
+mkdir Projects/Trilayer/Trilayer_Spacer_$spacer1
 
-mv -i Energy\ Data\ Total Trilayer_$spacer1
+mv -i Energy\ Data\ Total Trilayer_Spacer_$spacer1
 
-mv -i Magnetization\ Data\ Total Trilayer_$spacer1
+mv -i Magnetization\ Data\ Total Trilayer_Spacer_$spacer1
 
-mv -i Energy\ Data\ Bottom Trilayer_$spacer1
+mv -i Energy\ Data\ Bottom Trilayer_Spacer_$spacer1
 
-mv -i Magnetization\ Data\ Bottom Trilayer_$spacer1
+mv -i Magnetization\ Data\ Bottom Trilayer_Spacer_$spacer1
 
-mv -i Magnetization\ Data\ Top Trilayer_$spacer1
+mv -i Magnetization\ Data\ Top Trilayer_Spacer_$spacer1
 
-mv -i Energy\ Data\ Top Trilayer_$spacer1
+mv -i Energy\ Data\ Top Trilayer_Spacer_$spacer1
 
-mv -i Simulation Trilayer_$spacer1
+mv -i Simulation Trilayer_Spacer_$spacer1
 
 mkdir Projects/Trilayer/Simulation
 
