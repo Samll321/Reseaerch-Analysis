@@ -5,6 +5,9 @@
 #SBATCH --mem=100GB 
 #SBATCH --time=23:59:00
 
+spacer1=30
+spacer2=40
+
 cd ~/Desktop/oommf
 
 tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 1 pt $1 qt $2" -restart 0 -threads 20
@@ -23,7 +26,7 @@ mv -i SimTrilayerBottomM0*.omf m0filebottom.omf
 
 cd ~/Desktop/oommf
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0" -restart 0 -threads 20
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0 z2 $spacer1" -restart 0 -threads 20
 
 mkdir Projects/Trilayer/Energy\ Data\ Top
 
@@ -53,9 +56,9 @@ mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Top
 
 cd ~/Desktop/oommf
 
-tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 -14.0e-9 65.0e-9 65.0e-9 -10.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 -24.0e-9 65.0e-9 65.0e-9 -20.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
 
-tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 -14.0e-9 65.0e-9 65.0e-9 -10.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 -24.0e-9 65.0e-9 65.0e-9 -20.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
 
 cd Projects/Trilayer/Simulation
 
@@ -69,9 +72,9 @@ mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Bottom
 
 cd ~/Desktop/oommf
 
-tclsh oommf.tcl avf2odt -average "point" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
 
-tclsh oommf.tcl avf2odt -average "point" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
 
 cd Projects/Trilayer/Simulation
 
@@ -82,6 +85,24 @@ cd ../
 mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Total
 
 mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Total
+
+mkdir Projects/Trilayer/Trilayer_$spacer1
+
+mv -i Energy\ Data\ Total Trilayer_$spacer1
+
+mv -i Magnetization\ Data\ Total Trilayer_$spacer1
+
+mv -i Energy\ Data\ Bottom Trilayer_$spacer1
+
+mv -i Magnetization\ Data\ Bottom Trilayer_$spacer1
+
+mv -i Magnetization\ Data\ Top Trilayer_$spacer1
+
+mv -i Energy\ Data\ Top Trilayer_$spacer1
+
+mv -i Simulation Trilayer_$spacer1
+
+mkdir Projects/Trilayer/Simulation
 
 cd ~
 
