@@ -454,7 +454,7 @@ if {1 == $SimType} {
                 atlas :atlas
                 region diskb
                 scalarfield :zheight
-                scalarvalue -20e-9
+                scalarvalue [expr {-1*$z2}]
                 scalarside <=
             }
         }]

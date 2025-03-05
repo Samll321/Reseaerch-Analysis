@@ -2,12 +2,12 @@
 #SBATCH --nodes=1 
 #SBATCH --ntasks=1 
 #SBATCH --cpus-per-task=20 
-#SBATCH --mem=100GB  
+#SBATCH --mem=200GB  
 #SBATCH --time=23:59:00 
 
 cd ~/Desktop/oommf 
 
-spacer1=30  
+spacer1=30
 
 tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 1 pt $1 qt $2" -restart 0 -threads 20 
 
@@ -25,7 +25,7 @@ mv -i SimTrilayerBottomM0*.omf m0filebottom.omf
 
 cd ~/Desktop/oommf 
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0 z2 $spacer1" -restart 0 -threads 20 
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0 z2 $spacer1\e-9" -restart 0 -threads 20 
 
 mkdir Projects/Trilayer/Energy\ Data\ Top 
 
@@ -34,6 +34,8 @@ mkdir Projects/Trilayer/Magnetization\ Data\ Top
 mkdir Projects/Trilayer/Energy\ Data\ Bottom 
 
 mkdir Projects/Trilayer/Magnetization\ Data\ Bottom 
+
+sleep 10
 
 mkdir Projects/Trilayer/Energy\ Data\ Total 
 
@@ -85,7 +87,7 @@ mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Total
 
 mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Total 
 
-mkdir Projects/Trilayer/Trilayer_Spacer_$spacer1 
+mkdir "Projects/Trilayer/Trilayer_Spacer_$spacer1"
 
 mv -i Energy\ Data\ Total Trilayer_Spacer_$spacer1 
 
@@ -100,6 +102,8 @@ mv -i Magnetization\ Data\ Top Trilayer_Spacer_$spacer1
 mv -i Energy\ Data\ Top Trilayer_Spacer_$spacer1 
 
 mv -i Simulation Trilayer_Spacer_$spacer1 
+
+sleep 10
 
 mkdir Projects/Trilayer/Simulation 
 
