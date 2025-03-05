@@ -1,109 +1,108 @@
 #!/bin/bash 
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=20
-#SBATCH --mem=100GB 
-#SBATCH --time=23:59:00
+#SBATCH --nodes=1 
+#SBATCH --ntasks=1 
+#SBATCH --cpus-per-task=20 
+#SBATCH --mem=100GB  
+#SBATCH --time=23:59:00 
 
-spacer1=30
-spacer2=40
+cd ~/Desktop/oommf 
 
-cd ~/Desktop/oommf
+spacer1=30  
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 1 pt $1 qt $2" -restart 0 -threads 20
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 1 pt $1 qt $2" -restart 0 -threads 20 
 
-cd Projects/Trilayer/Simulation
+cd Projects/Trilayer/Simulation 
 
-mv -i SimTrilayerTopM0*.omf m0filetop.omf
+mv -i SimTrilayerTopM0*.omf m0filetop.omf 
 
-cd ~/Desktop/oommf
+cd ~/Desktop/oommf 
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 2 pb $3 qb $4" -restart 0 -threads 20
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 2 pb $3 qb $4" -restart 0 -threads 20 
 
-cd Projects/Trilayer/Simulation
+cd Projects/Trilayer/Simulation 
 
-mv -i SimTrilayerBottomM0*.omf m0filebottom.omf
+mv -i SimTrilayerBottomM0*.omf m0filebottom.omf  
 
-cd ~/Desktop/oommf
+cd ~/Desktop/oommf 
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0 z2 $spacer1" -restart 0 -threads 20
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0 z2 $spacer1" -restart 0 -threads 20 
 
-mkdir Projects/Trilayer/Energy\ Data\ Top
+mkdir Projects/Trilayer/Energy\ Data\ Top 
 
-mkdir Projects/Trilayer/Magnetization\ Data\ Top
+mkdir Projects/Trilayer/Magnetization\ Data\ Top 
 
-mkdir Projects/Trilayer/Energy\ Data\ Bottom
+mkdir Projects/Trilayer/Energy\ Data\ Bottom 
 
-mkdir Projects/Trilayer/Magnetization\ Data\ Bottom
+mkdir Projects/Trilayer/Magnetization\ Data\ Bottom 
 
-mkdir Projects/Trilayer/Energy\ Data\ Total
+mkdir Projects/Trilayer/Energy\ Data\ Total 
 
-mkdir Projects/Trilayer/Magnetization\ Data\ Total
+mkdir Projects/Trilayer/Magnetization\ Data\ Total 
 
-tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 0.0 65.0e-9 65.0e-9 4.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 0.0 65.0e-9 65.0e-9 4.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef" 
 
 tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 0.0 65.0e-9 65.0e-9 4.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
 
-cd Projects/Trilayer/Simulation
+cd Projects/Trilayer/Simulation 
 
-mv -i SimTrilayer-*.odt ../
+mv -i SimTrilayer-*.odt ../ 
 
-cd ../
+cd ../ 
 
-mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Top
+mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Top 
 
-mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Top
+mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Top 
 
-cd ~/Desktop/oommf
+cd ~/Desktop/oommf 
 
-tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 -24.0e-9 65.0e-9 65.0e-9 -20.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 -24.0e-9 65.0e-9 65.0e-9 -20.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef" 
 
 tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -region -65.0e-9 -65.0e-9 -24.0e-9 65.0e-9 65.0e-9 -20.0e-9 -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
 
-cd Projects/Trilayer/Simulation
+cd Projects/Trilayer/Simulation 
 
-mv -i SimTrilayer-*.odt ../
+mv -i SimTrilayer-*.odt ../ 
 
-cd ../
+cd ../ 
 
-mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Bottom
+mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Bottom 
 
-mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Bottom
+mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Bottom 
 
-cd ~/Desktop/oommf
+cd ~/Desktop/oommf 
 
-tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef"
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_RungeKuttaEvolve-evolver-Total_energy_density-*-*.oef" 
 
-tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf" 
+tclsh oommf.tcl avf2odt -average "line" -axis "z" -headers "none" -ipat "Projects/Trilayer/Simulation/SimTrilayer-Oxs_TimeDriver-Magnetization-*-*.omf"  
 
-cd Projects/Trilayer/Simulation
+cd Projects/Trilayer/Simulation 
 
-mv -i SimTrilayer-*.odt ../
+mv -i SimTrilayer-*.odt ../ 
 
-cd ../
+cd ../ 
 
-mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Total
+mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Total 
 
-mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Total
+mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Total 
 
-mkdir Projects/Trilayer/Trilayer_Spacer_$spacer1
+mkdir Projects/Trilayer/Trilayer_Spacer_$spacer1 
 
-mv -i Energy\ Data\ Total Trilayer_Spacer_$spacer1
+mv -i Energy\ Data\ Total Trilayer_Spacer_$spacer1 
 
-mv -i Magnetization\ Data\ Total Trilayer_Spacer_$spacer1
+mv -i Magnetization\ Data\ Total Trilayer_Spacer_$spacer1 
 
-mv -i Energy\ Data\ Bottom Trilayer_Spacer_$spacer1
+mv -i Energy\ Data\ Bottom Trilayer_Spacer_$spacer1 
 
-mv -i Magnetization\ Data\ Bottom Trilayer_Spacer_$spacer1
+mv -i Magnetization\ Data\ Bottom Trilayer_Spacer_$spacer1 
 
-mv -i Magnetization\ Data\ Top Trilayer_Spacer_$spacer1
+mv -i Magnetization\ Data\ Top Trilayer_Spacer_$spacer1 
 
-mv -i Energy\ Data\ Top Trilayer_Spacer_$spacer1
+mv -i Energy\ Data\ Top Trilayer_Spacer_$spacer1 
 
-mv -i Simulation Trilayer_Spacer_$spacer1
+mv -i Simulation Trilayer_Spacer_$spacer1 
 
-mkdir Projects/Trilayer/Simulation
+mkdir Projects/Trilayer/Simulation 
 
-cd ~
+cd ~ 
 
-done
+done 

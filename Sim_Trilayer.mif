@@ -98,7 +98,7 @@ set y [expr {130e-9}]
 
     set x2 $x
     set y2 $y
-    Paramater z2 [expr {1e-9}]
+    Parameter z2 [expr {1e-9}]
     set r2 [expr {$x2/2}]
 
     set 2thicknessby2 [expr {2e-9}] ;# Magntitude of distance from origin (0) to the top of the disk
