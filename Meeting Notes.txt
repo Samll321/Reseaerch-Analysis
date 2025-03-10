@@ -1,11 +1,15 @@
-Set Sigma one to the origional exchange value 
-    or 
-try system with large spacer to decouple the two disks and see if we get single disk plot, 
-this requires the cretion of a new mesh with one cell for very large spacer.
+3/2/25
+    Set Sigma one to the origional exchange value 
+        or 
+    try system with large spacer to decouple the two disks and see if we get single disk plot, 
+    this requires the cretion of a new mesh with one cell for very large spacer.
 
+3/10/25
+    check the plots for the bottom disk
 
+    try with the magnetization fo the bottom disk at zero
 
+    try exciting just the top disk
 
-
-try system with large spacer to decouple the two disks and see if we get single disk plot, 
-this requires the cretion of a new mesh with one cell for very large spacer.
+    try applying a perpendicular field to single disk to find the breathing modes, 
+    then compare to the unknown modes 

@@ -584,9 +584,10 @@ if {1 == $SimType} {
             }
         }]
 
+        # NOTE THIS IS RUNNING A PERPENDICULAR FIELD _____________________________________________________________________________________________________________________
         Specify Oxs_ScriptUZeeman {
            script_args {total_time}
-           script SincField
+           script SincFieldPerp
         }
 
         # Time Evolution drivers
@@ -691,6 +692,51 @@ if {1 == $SimType} {
                     set HxTaylor [expr {$HxTaylor0 + $HxTaylor1 + $HxTaylor2}]
                     set dHxTaylor [expr {$dHxTaylor0 + $dHxTaylor1 + $dHxTaylor2}]
                     return [list $HxTaylor 0 0 $dHxTaylor 0 0]
+                }
+            } else {
+                return [list 0 0 0 0 0 0]
+            }
+        } else { 
+            return [list 0 0 0 0 0 0]
+        }   
+    }
+
+    proc SincFieldPerp { total_time } {
+        global time_excited
+        global time_relax
+        global freq0
+        global freq1
+        global freq2
+        global amplitude0
+        global amplitude1
+        global amplitude2 
+        global pi 
+        global t0rel
+        set t0 [expr {$time_relax + $t0rel}]
+        set denom [expr {2*$pi*$total_time + 2*$pi*$t0}]
+        set Hx0 [expr $amplitude0* sin($freq0*$denom)/($freq0*$denom)]
+        set Hx1 [expr $amplitude1* sin($freq1*$denom)/($freq1*$denom)]
+        set Hx2 [expr $amplitude2* sin($freq2*$denom)/($freq2*$denom)]
+        set Hx [expr {$Hx0 + $Hx1 + $Hx2}]
+        set t_eff [expr {$total_time + $t0}]
+        set dHx0 [expr {$amplitude0*(cos($freq0*$denom)/$t_eff-sin($freq0*$denom)/($freq0*$denom*$t_eff))}]
+        set dHx1 [expr {$amplitude1*(cos($freq1*$denom)/$t_eff-sin($freq1*$denom)/($freq1*$denom*$t_eff))}]
+        set dHx2 [expr {$amplitude2*(cos($freq2*$denom)/$t_eff-sin($freq2*$denom)/($freq2*$denom*$t_eff))}]
+        set dHx [expr {$dHx0 + $dHx1 + $dHx2}]
+        if {$total_time < $time_excited } {  
+            if {$total_time > $time_relax} { 
+                if {pow(($total_time-$t0)*($total_time-$t0), .5) > 1e-11} {
+                    return [list 0 0 $Hx 0 0 $dHx] 
+                } else { 
+                    set HxTaylor0 [expr {$amplitude0*(1-pow($freq0*$denom, 2)/6 + pow($freq0*$denom,4)/120 - pow($freq0*$denom, 6)/5040 + pow($freq0*$denom, 8)/362880)}]
+                    set dHxTaylor0 [expr {$amplitude0*(-2*$freq0*$denom/6 + 4*pow($freq0*$denom,3)/120 - 6*pow($freq0*$denom, 5)/5040 + 8*pow($freq0*$denom, 7)/362880)}]
+                    set HxTaylor1 [expr {$amplitude1*(1-pow($freq1*$denom, 2)/6 + pow($freq1*$denom,4)/120 - pow($freq1*$denom, 6)/5040 + pow($freq1*$denom, 8)/362880)}]
+                    set dHxTaylor1 [expr {$amplitude1*(-2*$freq1*$denom/6 + 4*pow($freq1*$denom,3)/120 - 6*pow($freq1*$denom, 5)/5040 + 8*pow($freq1*$denom, 7)/362880)}]
+                    set HxTaylor2 [expr {$amplitude2*(1-pow($freq2*$denom, 2)/6 + pow($freq2*$denom,4)/120 - pow($freq2*$denom, 6)/5040 + pow($freq2*$denom, 8)/362880)}]
+                    set dHxTaylor2 [expr {$amplitude2*(-2*$freq2*$denom/6 + 4*pow($freq2*$denom,3)/120 - 6*pow($freq2*$denom, 5)/5040 + 8*pow($freq2*$denom, 7)/362880)}]
+                    set HxTaylor [expr {$HxTaylor0 + $HxTaylor1 + $HxTaylor2}]
+                    set dHxTaylor [expr {$dHxTaylor0 + $dHxTaylor1 + $dHxTaylor2}]
+                    return [list 0 0 $HxTaylor 0 0 $dHxTaylor]
                 }
             } else {
                 return [list 0 0 0 0 0 0]

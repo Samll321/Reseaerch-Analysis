@@ -7,7 +7,7 @@
 
 cd ~/Desktop/oommf 
 
-spacer1=30
+spacer1=40
 
 tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 1 pt $1 qt $2" -restart 0 -threads 20 
 
