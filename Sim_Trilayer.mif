@@ -493,7 +493,7 @@ if {1 == $SimType} {
 #Setting up single disk simulation, sim 4 is for generating the ground state for sim 5 to run off of
 
     set diam 130e-9 
-    set height 20e-9
+    set height 4e-9
     set radius [expr $diam/2]
     set halfHeight [expr $height/2]
 
