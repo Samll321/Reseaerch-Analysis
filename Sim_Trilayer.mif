@@ -498,7 +498,7 @@ if {1 == $SimType} {
     set halfHeight [expr $height/2]
 
     set cellDiam 2.5e-9
-    set cellHeight e-9
+    set cellHeight 1e-9
 
     Specify Oxs_BoxAtlas:atlas [subst {
         xrange {[expr {-$diam/2}] [expr {$diam/2}]}
