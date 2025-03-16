@@ -35,8 +35,6 @@ mkdir Projects/Trilayer/Energy\ Data\ Bottom
 
 mkdir Projects/Trilayer/Magnetization\ Data\ Bottom 
 
-sleep 10
-
 mkdir Projects/Trilayer/Energy\ Data\ Total 
 
 mkdir Projects/Trilayer/Magnetization\ Data\ Total 
@@ -102,8 +100,6 @@ mv -i Magnetization\ Data\ Top Trilayer_Spacer_$spacer1
 mv -i Energy\ Data\ Top Trilayer_Spacer_$spacer1 
 
 mv -i Simulation Trilayer_Spacer_$spacer1 
-
-sleep 10
 
 mkdir Projects/Trilayer/Simulation 
 
