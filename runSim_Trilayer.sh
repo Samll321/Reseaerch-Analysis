@@ -7,8 +7,6 @@
 
 cd ~/Desktop/oommf 
 
-spacer1=40
-
 tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 1 pt $1 qt $2" -restart 0 -threads 20 
 
 cd Projects/Trilayer/Simulation 
@@ -25,7 +23,7 @@ mv -i SimTrilayerBottomM0*.omf m0filebottom.omf
 
 cd ~/Desktop/oommf 
 
-tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0 z2 $spacer1\e-9" -restart 0 -threads 20 
+tclsh oommf.tcl boxsi "Projects/Trilayer/Simulation/Sim_Trilayer.mif" -parameters "SimType 0 z2 $5\e-9" -restart 0 -threads 20 
 
 mkdir Projects/Trilayer/Energy\ Data\ Top 
 
@@ -85,23 +83,47 @@ mv -i SimTrilayer-Oxs_RungeKuttaEvolve-*.odt Energy\ Data\ Total
 
 mv -i SimTrilayer-Oxs_TimeDriver-*.odt Magnetization\ Data\ Total 
 
-mkdir "Projects/Trilayer/Trilayer_Spacer_$spacer1"
+if [ $3 == 1]
+then
+    mkdir "Projects/Trilayer/Trilayer_Spacer_$spacer1"
 
-mv -i Energy\ Data\ Total Trilayer_Spacer_$spacer1 
+    mv -i Energy\ Data\ Total Trilayer_Spacer_$spacer1 
 
-mv -i Magnetization\ Data\ Total Trilayer_Spacer_$spacer1 
+    mv -i Magnetization\ Data\ Total Trilayer_Spacer_$spacer1 
 
-mv -i Energy\ Data\ Bottom Trilayer_Spacer_$spacer1 
+    mv -i Energy\ Data\ Bottom Trilayer_Spacer_$spacer1 
 
-mv -i Magnetization\ Data\ Bottom Trilayer_Spacer_$spacer1 
+    mv -i Magnetization\ Data\ Bottom Trilayer_Spacer_$spacer1 
 
-mv -i Magnetization\ Data\ Top Trilayer_Spacer_$spacer1 
+    mv -i Magnetization\ Data\ Top Trilayer_Spacer_$spacer1 
 
-mv -i Energy\ Data\ Top Trilayer_Spacer_$spacer1 
+    mv -i Energy\ Data\ Top Trilayer_Spacer_$spacer1 
 
-mv -i Simulation Trilayer_Spacer_$spacer1 
+    mv -i Simulation Trilayer_Spacer_$spacer1 
 
-mkdir Projects/Trilayer/Simulation 
+    mkdir Projects/Trilayer/Simulation 
+fi
+
+if [$3 == -1]
+then
+    mkdir "Projects/Trilayer/Trilayer_Spacer_$spacer1\_(Anti)"
+
+    mv -i "Energy\ Data\ Total Trilayer_Spacer_$spacer1\_(Anti)"
+
+    mv -i "Magnetization\ Data\ Total Trilayer_Spacer_$spacer1\_(Anti)"
+
+    mv -i "Energy\ Data\ Bottom Trilayer_Spacer_$spacer1\_(Anti)"
+
+    mv -i "Magnetization\ Data\ Bottom Trilayer_Spacer_$spacer1\_(Anti)"
+
+    mv -i "Magnetization\ Data\ Top Trilayer_Spacer_$spacer1\_(Anti)"
+
+    mv -i "Energy\ Data\ Top Trilayer_Spacer_$spacer1\_(Anti)"
+
+    mv -i "Simulation Trilayer_Spacer_$spacer1\_(Anti)" 
+
+    mkdir "Projects/Trilayer/Simulation"
+fi
 
 cd ~ 
 

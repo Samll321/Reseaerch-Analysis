@@ -492,8 +492,8 @@ if {1 == $SimType} {
 } elseif {4 == $SimType || 5==$SimType } {
 #Setting up single disk simulation, sim 4 is for generating the ground state for sim 5 to run off of
 
-    set diam 130e-9 
-    set height 4e-9
+    set diam 160e-9 
+    set height 7e-9
     set radius [expr $diam/2]
     set halfHeight [expr $height/2]
 
@@ -704,10 +704,10 @@ if {1 == $SimType} {
     proc SincFieldPerp { total_time } {
         global time_excited
         global time_relax
-        global freq0
+        set freq0 100e9
         global freq1
         global freq2
-        global amplitude0
+        set amplitude0 3978.8735773
         global amplitude1
         global amplitude2 
         global pi 
@@ -745,3 +745,5 @@ if {1 == $SimType} {
             return [list 0 0 0 0 0 0]
         }   
     }
+
+    
