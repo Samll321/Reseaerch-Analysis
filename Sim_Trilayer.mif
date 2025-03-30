@@ -20,7 +20,7 @@ Parameter SimType 4 ;#sets type of simulation, 1 creates the top disk ground sta
 # Simulation Length and Data output 
 #---------------------------------------------------------------------
 
-set stage_length 31.25e-12  ;#s 
+set stage_length 2.0e-11  ;#s was 31.25e-12 
 set total_time_running 40.00e-9  ;#s
 set num_of_stages_ [subst [expr {$total_time_running/$stage_length}]]
 set num_of_stages [expr int($num_of_stages_)]
