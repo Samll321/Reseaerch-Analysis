@@ -500,7 +500,7 @@ if {1 == $SimType} {
     set cellDiam 2.5e-9
     set cellHeight 1e-9
 
-    set M0s = [expr {8.6e5}]  ;#A/m
+    set M0s [expr {8.6e5}]  ;#A/m
     set As [expr {1.3e-11}]  ;#J/m
 
     Specify Oxs_BoxAtlas:atlas [subst {
