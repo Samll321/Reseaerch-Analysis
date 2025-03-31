@@ -500,6 +500,9 @@ if {1 == $SimType} {
     set cellDiam 2.5e-9
     set cellHeight 1e-9
 
+    set M0s = [expr {8.6e5}]  ;#A/m
+    set As [expr {1.3e-11}]  ;#J/m
+
     Specify Oxs_BoxAtlas:atlas [subst {
         xrange {[expr {-$diam/2}] [expr {$diam/2}]}
         yrange {[expr {-$diam/2}] [expr {$diam/2}]}
@@ -512,10 +515,10 @@ if {1 == $SimType} {
     }]
 
     Specify Oxs_Exchange6Ngbr [subst {
-        default_A $A
+        default_A $As
         atlas :atlas
            A {
-            atlas atlas $A
+            atlas atlas $As
         }
     }]
 
@@ -540,7 +543,7 @@ if {1 == $SimType} {
             evolver	:evolver
             mesh :mesh
             Ms { Oxs_ScriptScalarField {
-                script {Cyl2 $M01 $radius $halfHeight}
+                script {Cyl2 $M0s $radius $halfHeight}
                 atlas :atlas
                 script_args { rawpt }
                 }

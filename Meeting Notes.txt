@@ -23,13 +23,13 @@ Top Priority to start
     fix the 13.76ghz plot for single disk perp  - Rechecked and can't find better plot in curreent data
 
     read literature on radial modes. 
-        Reproducee the B and D plot in https://pubs.aip.org/aip/apl/article/100/17/172413/385197/Radial-spin-wave-mode-assisted-vortex-core?searchresult=1
+        Reproducee the B and D plot in https://pubs.aip.org/aip/apl/article/100/17/172413/385197/Radial-spin-wave-mode-assisted-vortex-core?searchresult=1 - In progress
         Check to see in height of disk affects radial modes
         check to see if change in amplitude of excitation affects radial modes
 
-    Try simulations with opposite polarity 
+    Try simulations with opposite polarity - 40nm height done, retest 30nm, and run 20nm and 10nm
 
-    rought calcualte of diple field strength from one disk, 
+    rought calcualte of dipole field strength from one disk, 
         - can do this by taking magentization of each cell and averagnig over the area of the disk. 
         - this gives dipole moment of the entire disk, 
         - then seee the field this produces, and compare it with the strenght of excitation field
